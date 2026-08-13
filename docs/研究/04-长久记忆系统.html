@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 04 · 长久记忆 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>04</span></div>
+    <h1>长久记忆</h1>
+    <p class="subtitle">人的记忆不是数据库，而是会忘记、会联想、会重构的活物。长久记忆要模拟的正是这个"活"。</p>
+    <div class="meta">
+      <span class="badge">记忆</span>
+      <span class="badge">设计层面</span>
+      <span class="badge">2026-08-13</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 核心思想：记忆是"成为"的载体</h2>
+      <p>没有记忆，Agent 只是"扮演"一个人；有了记忆，Agent 才"成为"一个人。长久记忆决定它：</p>
+      <ul>
+        <li><b>记得谁</b>：关系、恩怨、承诺。</li>
+        <li><b>懂得什么</b>：知识、经验、教训。</li>
+        <li><b>是什么样的人</b>：经历沉淀出的性格与价值观。</li>
+      </ul>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>设计取向：长久记忆的目标不是"存得越多越好"，而是<b>存得恰如一个人</b>。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 三层设计：RAG 库 · 大纲索引 · 数据模糊</h2>
+      <p>本项目的长久记忆由三层结构组成，各司其职：</p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">📚</div>
+          <h4>RAG 库 · 事实层</h4>
+          <p>大量"具体发生过的事"：语义化存储、按相关性检索。回答"我记得"。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗂</div>
+          <h4>大纲索引 · 结构层</h4>
+          <p>把散落的记忆归纳为结构化的脉络：人物关系、事件主线、知识框架。回答"我懂"。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌫</div>
+          <h4>数据模糊 · 遗忘层</h4>
+          <p>记忆随时间衰减、被相似经历混淆、被重构。回答"我忘了 / 我记不清了"。</p>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>层</th><th>像人脑的什么</th><th>回答的问题</th><th>拟真特点</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>RAG 库</td><td>情景记忆</td><td>具体细节</td><td>按相关性想起，不按顺序倒背</td></tr>
+          <tr><td>大纲索引</td><td>语义记忆 / 框架</td><td>概念与脉络</td><td>多件事总结成一条规律</td></tr>
+          <tr><td>数据模糊</td><td>遗忘与重构</td><td>模糊与偏差</td><td>旧事渐淡，相似的事混在一起</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="warm">
+      <h2>3. 为什么会"忘"：衰减与模糊</h2>
+      <p>拟真记忆的要点之一是<b>允许不精确</b>。设计上要考虑三种自然现象：</p>
+      <ul>
+        <li><b>时间衰减</b>：越久远的事越淡，除非它特别重要。</li>
+        <li><b>相似混淆</b>：两件相似的事会互相"染色"，最后记住的是模糊的混合体。</li>
+        <li><b>重构偏差</b>：回忆不是回放，而是重建 —— 每次想起都带上了当下的情绪与立场。</li>
+      </ul>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>这是与"企业级 RAG"最大的分野：企业 RAG 追求精确，<b>我们的记忆追求真实</b>。误差不是 bug，而是人格的一部分。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 记忆怎么被"想起"：回忆的触发</h2>
+      <p>人不是翻档案，而是被<b>触发</b>。设计上回忆应当由线索唤起：</p>
+      <ul>
+        <li><b>由事件触发</b>：正在发生的事，勾起了相似经历。</li>
+        <li><b>由情绪触发</b>：相似的心情，让相关记忆更容易浮现。</li>
+        <li><b>由联想触发</b>：想到 A，连带想起 A 的朋友 B，再想起关于 B 的事。</li>
+      </ul>
+      <p>被唤起的记忆回到瞬时记忆（工作台），参与当下的思考 —— 这就是"触景生情"的机制化。</p>
+    </section>
+
+    <section class="cool">
+      <h2>5. 记忆与人格的相互作用</h2>
+      <p>长久记忆与人格是<b>互相塑造</b>的关系：</p>
+      <pre>
+经历 ──沉淀──▶ 记忆
+                 │
+                 ▼
+           人格（性格 · 价值观）
+                 │
+                 ▼
+经历 ──选择──▶ 记什么 · 怎么记 · 想起什么
+      </pre>
+      <ul>
+        <li>人格决定<b>注意什么</b>：开朗的人记得热闹，谨慎的人记得风险。</li>
+        <li>记忆反过来<b>加固人格</b>：反复想起的经历，让性格越来越定型。</li>
+      </ul>
+      <p>这层双向关系，是把"记忆系统"和"身份认知"绑在一起的设计依据，详见 <a class="ext" href="05-教育系统与人格属性.html">研究 05</a>。</p>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>长久记忆分三层：RAG 库（事实）、大纲索引（结构）、数据模糊（遗忘）。</li>
+        <li>拟真优先于精确：衰减、混淆、重构都是特性。</li>
+        <li>回忆由事件、情绪、联想触发，回到瞬时记忆参与思考。</li>
+        <li>记忆与人格互相塑造，形成稳定的"自我"。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 04</span>
+    <span class="pager">
+      <a href="03-自我思考循环与瞬时记忆.html">← 上一篇</a>
+      <a href="05-教育系统与人格属性.html">下一篇：教育与身份 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

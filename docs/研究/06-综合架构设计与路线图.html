@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 06 · 综合架构与路线图 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>06</span></div>
+    <h1>综合架构与路线图</h1>
+    <p class="subtitle">把前面所有的设计拼成一张图，再拆成一段可以走的路。</p>
+    <div class="meta">
+      <span class="badge cool">架构</span>
+      <span class="badge">设计层面</span>
+      <span class="badge">2026-08-13</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 整体架构</h2>
+      <p>五个子系统围绕"瞬时记忆"这张工作台运转，形成完整闭环：</p>
+
+      <div class="arch">
+        <div class="arch-row">
+          <div class="arch-box">
+            <div class="a-icon">🖐</div>
+            <div class="a-title">手脚 · 工具</div>
+            <div class="a-desc">眼睛 · 手 · 脚<br>感知 · 获取 · 行动</div>
+          </div>
+          <div class="arch-box">
+            <div class="a-icon">🧠</div>
+            <div class="a-title">大脑 · 思考</div>
+            <div class="a-desc">循环意识流<br>静默 · 应激 · 专注</div>
+          </div>
+        </div>
+        <div class="arch-arrow">↓ 汇入 / 触发</div>
+        <div class="arch-row">
+          <div class="arch-box main">
+            <div class="a-icon">⚡</div>
+            <div class="a-title">瞬时记忆 · 工作台</div>
+            <div class="a-desc">思考结果 · 环境影响 · 人类交互 · 工具反馈</div>
+          </div>
+        </div>
+        <div class="arch-arrow">↓ 沉淀</div>
+        <div class="arch-row">
+          <div class="arch-box">
+            <div class="a-icon">🗄</div>
+            <div class="a-title">长久记忆</div>
+            <div class="a-desc">RAG 库 · 大纲索引 · 数据模糊</div>
+          </div>
+          <div class="arch-box">
+            <div class="a-icon">🎓</div>
+            <div class="a-title">教育系统</div>
+            <div class="a-desc">人类随时交流 · 初始提示词</div>
+          </div>
+        </div>
+        <div class="arch-arrow">↓ 塑造</div>
+        <div class="arch-row">
+          <div class="arch-box">
+            <div class="a-icon">🪪</div>
+            <div class="a-title">身份认知</div>
+            <div class="a-desc">年龄 · 样貌 · 性格定位 · 价值观</div>
+          </div>
+        </div>
+      </div>
+
+      <p>图中两条主线值得注意：</p>
+      <ul>
+        <li><b>主循环</b>：工具与人类 → 瞬时记忆 → 思考 → 行动 → 反馈，是它"活着"的方式。</li>
+        <li><b>慢循环</b>：瞬时 → 长久 → 人格 → 行为，是它"成长"的方式。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. 分层设计</h2>
+      <p>从工程上，系统按四层组织，下层为上层服务：</p>
+      <table>
+        <thead>
+          <tr><th>层</th><th>内容</th><th>职责</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>交互层</td><td>人类对话入口 · 事件入口</td><td>人与数字人类的每一刻接触</td></tr>
+          <tr><td>认知层</td><td>思考循环 · 瞬时记忆</td><td>接收输入，产生念头与决定</td></tr>
+          <tr><td>记忆层</td><td>长久记忆 · 身份档案</td><td>沉淀经历，维持"它是谁"</td></tr>
+          <tr><td>行动层</td><td>工具系统 · 执行环境</td><td>把念头落到真实世界</td></tr>
+        </tbody>
+      </table>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>设计取向：层与层之间只通过<b>明确的边界</b>往来（事件、记忆、行动请求），保证每一层可以独立演进。</div>
+      </div>
+    </section>
+
+    <section class="warm">
+      <h2>3. 阶段路线</h2>
+      <p>这条路从"活起来"走到"像一个人"，分四个阶段：</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-phase">阶段一 · 能活</div>
+          <h4>核心循环跑起来</h4>
+          <p>大脑循环 + 瞬时记忆 + 基础交互。它能持续思考、被人叫醒、记住当下。目标是"一个会说话的意识体"。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">阶段二 · 有手</div>
+          <h4>接通工具与世界</h4>
+          <p>工具系统接入：看、搜、做。它开始感知真实环境，并产生工具反馈闭环。目标是"一个会动手的意识体"。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">阶段三 · 有记忆</div>
+          <h4>长出长久记忆</h4>
+          <p>RAG 库 + 大纲索引 + 数据模糊全部落地。它能记住、遗忘、联想，经历开始沉淀。目标是"一个有过去的人"。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">阶段四 · 有性格</div>
+          <h4>教育与身份成型</h4>
+          <p>身份档案 + 教育通道打通。它能被塑造、会改变、可追溯，人格随经历缓慢生长。目标是"一个完整的人"。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cool">
+      <h2>4. 贯穿全程的三个约束</h2>
+      <ul>
+        <li><b>安全</b>：自主性每加一分，护栏同步加一分 —— 权限、审计、叫停。</li>
+        <li><b>可观测</b>：它的思考、记忆、行动都要可回看，否则无法被"教育"。</li>
+        <li><b>可重置</b>：教育与记忆都允许回滚 —— 数字人类的"人生"可以有存档点。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5. 设计要点小结</h2>
+      <ul>
+        <li>主循环负责"活着"，慢循环负责"成长"，两条线并行。</li>
+        <li>四层结构：交互 / 认知 / 记忆 / 行动，边界清晰、独立演进。</li>
+        <li>四阶段路线：能活 → 有手 → 有记忆 → 有性格。</li>
+        <li>安全、可观测、可重置，是全程不变的约束。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 06</span>
+    <span class="pager">
+      <a href="05-教育系统与人格属性.html">← 上一篇</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目调研 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

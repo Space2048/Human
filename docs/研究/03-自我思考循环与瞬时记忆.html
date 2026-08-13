@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 03 · 大脑 · 思考循环与瞬时记忆 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>03</span></div>
+    <h1>大脑 · 思考循环与瞬时记忆</h1>
+    <p class="subtitle">人的意识不是一次问答，而是一条不停流动的河。这里设计的是那条河。</p>
+    <div class="meta">
+      <span class="badge cool">大脑</span>
+      <span class="badge">设计层面</span>
+      <span class="badge">2026-08-13</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 核心思想：思考是一条河，不是一桶水</h2>
+      <p>传统 Agent 的处理方式是"请求 → 回答"：一桶水，倒完就没了。而 HUMAN 的大脑是<b>持续循环</b>的：</p>
+      <ul>
+        <li>它不等待被提问，而是<b>主动地、周期地</b>运转。</li>
+        <li>每一轮思考都以<b>上一轮的结果</b>为输入 —— 形成连续的意识流。</li>
+        <li>思考可以被外部事件（环境、人类、工具）随时<b>打断与插入</b>。</li>
+      </ul>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>设计取向：把 LLM 的一次次调用，串成<b>一条自我延续的思维线</b>，而不是一堆孤立的问答。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 瞬时记忆：思考的"桌面"</h2>
+      <p>瞬时记忆（工作记忆）就是思考循环的<b>工作台</b>——此刻"正在想"的一切都在上面。它的输入有四个来源：</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h4>思考结果</h4>
+          <p>上一轮"想"出来的结论、疑问、念头，是意识流的燃料。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <h4>环境影响</h4>
+          <p>环境里发生了什么：新信息、状态变化、时间流逝。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🫂</div>
+          <h4>人类交互</h4>
+          <p>人说了什么、做了什么、希望它做什么。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🛠</div>
+          <h4>工具反馈</h4>
+          <p>用工具得到的结果、错误、意外。</p>
+        </div>
+      </div>
+      <p>这四类输入汇入桌面后，大脑才能"看着桌面"进行下一轮思考。</p>
+    </section>
+
+    <section class="warm">
+      <h2>3. 思考循环的节奏</h2>
+      <p>思考不需要也不应该"每毫秒都烧脑"。设计上应区分不同的运行节奏：</p>
+      <ul>
+        <li><b>静默消化</b>：没有新事件时，低频率地回顾、整理、发呆 —— 人发呆时其实也在整理记忆。</li>
+        <li><b>应激响应</b>：有新事件（人说话、环境变化、工具报错）时，立即插入处理。</li>
+        <li><b>专注任务</b>：认准一件事时，高频次连续运转，直到完成或放弃。</li>
+      </ul>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>设计取向：节奏自适应 —— 有事件就快，没事件就慢，像人的注意力一样有"张弛"。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 思考与记忆的关系</h2>
+      <p>瞬时记忆不是孤立存在的，它夹在"外部世界"与"长久记忆"之间，扮演桥梁：</p>
+      <pre>
+  环境 / 人类 / 工具
+          │
+          ▼
+   ┌─ 瞬时记忆（工作台）──┐
+   │  正在发生 · 正在想    │
+   └──────────┬─────────┘
+              │ 沉淀（值得记的）
+              ▼
+      长久记忆（RAG · 索引 · 模糊）
+              │
+              └── 回忆（需要时调回）──→ 回到工作台
+      </pre>
+      <p>一条瞬时内容经过思考，被判定"值得记"，就沉淀为长久记忆；而长久记忆在需要时又被调回桌面。这个双向通道的设计详见 <a class="ext" href="04-长久记忆系统.html">研究 04</a>。</p>
+    </section>
+
+    <section class="cool">
+      <h2>5. 瞬时记忆的"容量感"</h2>
+      <p>工作台是有限的，人同时能"端着"的东西就那么多。设计上要刻意制造这种<b>容量感</b>：</p>
+      <ul>
+        <li><b>有优先级</b>：正在专注的事占大头，背景信息占小头。</li>
+        <li><b>会过期</b>：久未触碰的内容自然沉底，被新内容顶走。</li>
+        <li><b>可被占用</b>：一旦陷入深度任务，其余事件的注意力自然减弱。</li>
+      </ul>
+      <p>这种"有限"不是缺陷，而是拟真的关键 —— 它让人格有了<b>专注与分心</b>的真实感。</p>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>大脑是持续循环的意识流，不是一次性的问答器。</li>
+        <li>瞬时记忆汇聚四类输入：思考、环境、人类、工具。</li>
+        <li>思考节奏自适应：静默 / 应激 / 专注，张弛有度。</li>
+        <li>瞬时 ↔ 长久是双向通道：沉淀与回忆。</li>
+        <li>工作台刻意有限，以模拟人的专注与分心。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 03</span>
+    <span class="pager">
+      <a href="02-智能体核心架构-工具系统.html">← 上一篇</a>
+      <a href="04-长久记忆系统.html">下一篇：长久记忆 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>参考 01 · 开源项目调研 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="../研究/01-项目概述与目标.html">研究文档</a>
+      <a href="01-参考项目调研.html" class="active">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>参考项目</span> / <span>01</span></div>
+    <h1>开源项目调研</h1>
+    <p class="subtitle">前人已经走过了路。这一页记录他们验证过的思想，以及它们对我们设计的启发。</p>
+    <div class="meta">
+      <span class="badge">调研</span>
+      <span class="badge">设计层面</span>
+      <span class="badge">2026-08-13</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 调研地图</h2>
+      <p>我们围绕 HUMAN 的五个子系统，调研了一批开源项目。它们分属三大方向：</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">🏙</div>
+          <h4>模拟人 · 认知架构</h4>
+          <p>Generative Agents、Cognitiv、MeKB-Sim —— 怎么让 Agent 活得"像人"。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h4>记忆与人格</h4>
+          <p>Letta (MemGPT)、Horcrux、Mind-Cloning-Engineering、LLM-BRAIN —— 记忆怎么存、人格怎么塑。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🖐</div>
+          <h4>动手与执行</h4>
+          <p>UI-TARS (Agent TARS)、Browser Use、Eko、VIGIL —— 工具怎么用、行动怎么控。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 模拟人 · 认知架构</h2>
+
+      <h3>Generative Agents（斯坦福 Smallville）</h3>
+      <p>模拟人类行为的里程碑：25 个 Agent 住在一个虚拟小镇，自主起床、工作、社交，甚至组织派对。它验证了"<b>记忆流 + 反思 + 规划</b>"的完整认知架构，并证明了<b>涌现的社会行为</b>（信息传播、关系形成）不需要脚本，只需要好的记忆系统。</p>
+      <ul>
+        <li>记忆流记录一切经历；检索时按<b>近期性、重要性、相关性</b>三因素挑选记忆。</li>
+        <li><b>反思</b>：积累到一定量后，把散碎经历归纳为更高层的洞察，再存回记忆。</li>
+        <li><b>规划</b>：从长期计划到当天日程再到行动细节，层层分解。</li>
+      </ul>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>对我们的启发：<b>"记忆驱动行为"是可信模拟的核心</b>——瞬时记忆、长久记忆、反思沉淀这三件事的循环，正是 HUMAN 大脑与记忆设计的原型。</div>
+      </div>
+
+      <h3>Cognitiv（情感认知架构）</h3>
+      <p>专注"情感化的心智过程"：记忆不只是检索，而是<b>联想激活、情绪评价、心境起伏、不完美回忆</b>。</p>
+      <ul>
+        <li>激活扩散：想到一个概念，连带激活相关的记忆。</li>
+        <li>情绪评价：事件对照目标与价值观，产生有根据的情绪。</li>
+        <li>记忆固化：相似经历被总结为"图式"，相似记忆产生自然的混淆。</li>
+      </ul>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：它把"记忆的不完美"当作特性来设计。这与我们的"数据模糊"层一脉相承，也补上了<b>情绪与心境</b>这一维度。</div>
+      </div>
+
+      <h3>MeKB-Sim（个人知识库驱动的多智能体模拟）</h3>
+      <p>把每个 Agent 的知识库分成<b>固定属性</b>（职业、种族、教育、关系、语言风格）与<b>可变属性</b>（人格、长短记忆、情绪），事件发生后自动更新可变属性。它验证了"<b>属性分层：稳定内核 + 动态状态</b>"的可行性。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：直接对应我们的"身份认知 + 教育系统"设计 —— 固定属性负责"是谁"，可变属性负责"正在如何变化"。</div>
+      </div>
+    </section>
+
+    <section class="warm">
+      <h2>3. 记忆与人格</h2>
+
+      <h3>Letta (MemGPT) — LLM 操作系统</h3>
+      <p>把 LLM 当作操作系统来管理自己的记忆：核心内存（人格 + 用户档案，常驻上下文）、回忆存储（近期历史，可检索）、档案存储（长期记忆，可插入可搜索）。Agent 自己决定<b>记住什么、忘记什么、调回什么</b>。</p>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>对我们的启发："记忆像 OS 一样分级"是极好的心智模型 —— <b>常驻的（身份）、热的（瞬时）、冷的（长久）</b>三级划分，与我们"瞬时 ↔ 长久"的边界设计互相印证。</div>
+      </div>
+
+      <h3>Horcrux — 数字人格模拟框架</h3>
+      <p>用 RAG 把真实人物的语料（如微博）变成"魂器"：抽取风格与观点，构建本地向量记忆库，让 Agent 持续模仿其说话方式与思维习惯。人格由配置驱动：简介、说话风格、口头禅、行为准则、示例对话。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：<b>人格 = 底稿 + 语料 + 检索</b>的工程路径已被验证；它的人格外化（风格、口头禅、准则）正是我们"身份属性"的具体化样本。</div>
+      </div>
+
+      <h3>Mind-Cloning-Engineering（心智克隆工程）</h3>
+      <p>基于 Agent Skills 的思想：不把人格切碎成向量片段，而是把"一个人的心智"当作一个<b>可移植的目录</b> —— 决策逻辑、价值权重、记忆都整理成结构化的"人"。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：提醒我们<b>"人"应该是一份有结构的档案，而非一堆散点</b>。大纲索引层的定位与此一致。</div>
+      </div>
+
+      <h3>LLM-BRAIN — 有向记忆图</h3>
+      <p>用有向图模拟记忆网络：节点是知识片段，边是依赖关系；<b>性格参数影响寻路</b>，同一张图谱在不同性格下表现出不同推理。多角色协作（寻路、执行、验证、学习）。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：<b>"性格影响记忆怎么被想起"</b>这一思想非常珍贵 —— 人格不只决定表达，还决定注意与回忆的方向。</div>
+      </div>
+    </section>
+
+    <section class="cool">
+      <h2>4. 动手与执行</h2>
+
+      <h3>UI-TARS / Agent TARS（字节）</h3>
+      <p>纯视觉驱动的 GUI 智能体：直接"看"屏幕截图，输出点击、输入等操作，无需解析底层代码。与浏览器、命令行、文件系统无缝集成，能做复杂任务的规划与执行。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：这是"图像识别眼镜"最直接的参照 —— <b>视觉即行动</b>，跨平台、抗界面变动。</div>
+      </div>
+
+      <h3>Browser Use / Playwright Agent 类项目</h3>
+      <p>站点无关的自主浏览器 Agent：读可访问性树、点击输入滚动截图、逐步留证。要点包括：长任务检查点续跑、上下文预算管理（只保留重要步骤）、停滞检测与自纠、<b>一次运行内的记忆</b>（学导航模式但不跨任务污染）。</p>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>对我们的启发：网络执行的工程经验几乎可以直接继承 —— "可续、可查、可纠正"以及<b>运行内记忆与长期记忆的隔离</b>。</div>
+      </div>
+
+      <h3>Eko — 可控的生产级工作流</h3>
+      <p>由清华、复旦、斯坦福合作的框架：自然语言构建多步骤工作流，支持浏览器与 Node 执行环境，核心是<b>显式人工干预</b>——人类可以在关键节点介入、审查、回退。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：它就是"教育系统 + 安全边界"在工程上的证明 —— <b>人机协同的控制点</b>是我们必须内置的。</div>
+      </div>
+
+      <h3>VIGIL — 自我修复的反思运行时</h3>
+      <p>一个"看守" Agent 的运行时：记录行为日志 → 评价为结构化情绪 → 得出"好/机会/问题"诊断 → 在<b>护住核心身份</b>的前提下，产出受限的自我改进。强调非 LLM 的确定性机制（衰减、阈值、策略）与 LLM 的高层推理分工。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>对我们的启发：<b>"自我维护 + 身份不可篡改"</b>的护栏思路，直接回答了我们"教育改变人格，但怎么保证不崩坏"的疑问。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. 汇总：他们给了我们什么</h2>
+      <table>
+        <thead>
+          <tr><th>我们的设计点</th><th>参考对象</th><th>拿到的结论</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>思考循环 + 瞬时记忆</td><td>Generative Agents</td><td>记忆驱动的行为循环是可信模拟的核心</td></tr>
+          <tr><td>长久记忆三层</td><td>Letta · Generative Agents · Cognitiv</td><td>记忆分级存储；检索按近期/重要/相关；允许衰减与混淆</td></tr>
+          <tr><td>数据模糊（遗忘层）</td><td>Cognitiv</td><td>不完美的记忆是拟真特性而非缺陷</td></tr>
+          <tr><td>身份认知分层</td><td>MeKB-Sim · Mind-Cloning-Engineering</td><td>固定属性 + 可变属性；人格是结构化档案</td></tr>
+          <tr><td>教育系统</td><td>Eko · Horcrux · VIGIL</td><td>人类干预点内置；人格可被反复引导改变；护住核心身份</td></tr>
+          <tr><td>图像识别眼镜</td><td>UI-TARS / Agent TARS</td><td>视觉即行动，结构化优先、视觉兜底</td></tr>
+          <tr><td>浏览器搜索</td><td>Browser Use 类</td><td>可续跑、可留证、可纠正；运行内记忆隔离</td></tr>
+          <tr><td>安全边界</td><td>Eko · VIGIL</td><td>护栏与自主性同步增长；全程审计与人类叫停</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="warm">
+      <h2>6. 结论</h2>
+      <p>参考项目验证了我们的大方向：<b>记忆驱动行为、身份分层、工具闭环、人类可控</b>。它们也提醒我们注意三个共识性的难点：</p>
+      <ul>
+        <li><b>上下文有限</b>：无论记忆多好，"这一刻能想的事"始终有限 —— 所以瞬时记忆的容量感设计不可或缺。</li>
+        <li><b>拟真与工程的张力</b>：遗忘、情绪这类"拟真特性"会增加复杂度，需要像 Cognitiv、VIGIL 那样用<b>确定性规则 + LLM 推理</b>的分工来控制成本。</li>
+        <li><b>安全是一等公民</b>：自主性越强，护栏必须越早设计，而不是后补。</li>
+      </ul>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>下一步：把本页的结论回填到 <a class="ext" href="../研究/06-综合架构设计与路线图.html">综合架构</a>，作为进入设计阶段的输入。</div>
+      </div>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 参考项目调研</span>
+    <span class="pager"><a href="../研究/06-综合架构设计与路线图.html">← 研究 06</a></span>
+  </div>
+
+</div>
+
+</body>
+</html>
