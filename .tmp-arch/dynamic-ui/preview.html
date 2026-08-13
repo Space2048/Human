@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dynamic-ui 预览 · 反馈系统架构</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background: #f6f7f9;
+    color: #171717;
+    padding: 32px 20px 60px;
+    line-height: 1.7;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  .head { margin-bottom: 16px; }
+  .head h1 { font-size: 22px; font-weight: 800; }
+  .head p { color: #52525B; font-size: 13.5px; margin-top: 4px; }
+  .theme-toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid #e4e7ec; border-radius: 8px;
+    padding: 8px 14px; margin-bottom: 16px; cursor: pointer;
+    font-size: 13px; color: #52525B;
+  }
+  .theme-toggle:active { transform: translateY(1px); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>dynamic-ui · 反馈系统架构图</h1>
+    <p>widget 本体为无壳规范代码（feedback-widget.html），本页仅作预览外壳 · 遵循 dynamic-ui 视觉令牌</p>
+  </div>
+  <button class="theme-toggle" id="toggle">🌗 切换明暗主题</button>
+  <div id="host" data-widget-theme="light"></div>
+</div>
+<script>
+  const host = document.getElementById('host');
+  const btn = document.getElementById('toggle');
+  fetch('feedback-widget.html')
+    .then(r => r.text())
+    .then(html => {
+      host.innerHTML = html;
+      const root = host.firstElementChild;
+      root.setAttribute('data-dynamic-ui-widget', '');
+      root.setAttribute('data-template', 'feedback-system');
+      root.setAttribute('data-mounted', 'true');
+    });
+  btn.addEventListener('click', () => {
+    const cur = host.getAttribute('data-widget-theme');
+    host.setAttribute('data-widget-theme', cur === 'light' ? 'dark' : 'light');
+  });
+</script>
+</body>
+</html>
