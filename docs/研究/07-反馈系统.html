@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 07 · 反馈系统 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+/* ============ dynamic-ui widget 内嵌（作用域化，遵循 visual-tokens） ============ */
+.dui-fb {
+  box-sizing: border-box;
+  width: 100%;
+  color: #171717;
+  background: #F7F7F8;
+  border: 1px solid rgba(23, 23, 23, 0.12);
+  border-radius: 12px;
+  padding: 20px;
+  font: 400 14px/20px -apple-system, "SF Pro Text", "PingFang SC", system-ui, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0;
+  --surface: #F7F7F8;
+  --surface-muted: #EFEFF2;
+  --text: #171717;
+  --text-muted: #52525B;
+  --border: rgba(23, 23, 23, 0.12);
+  --brand: #4B3FE3;
+  --brand-soft: #F2F7FF;
+  --brand-soft-strong: #E5EAFF;
+  --brand-text: #1A1759;
+  --brand-on: #FFFFFF;
+  --chart-series-1: #3C2ECA;
+  --chart-series-2: #A9AEFF;
+  --chart-series-3: #6F6FFF;
+  --chart-series-4: #22A5F7;
+  --chart-other: #D3D4DA;
+  --accent: #27D2BF;
+  --accent-soft: #EAFBF8;
+  --accent-text: #0F766E;
+  --success: #1DC981;
+  --warning: #EFAA17;
+  --danger: #E8463A;
+  --radius: 8px;
+  --radius-card: 12px;
+  --radius-full: 999px;
+  --spacer-4: 4px;
+  --spacer-8: 8px;
+  --spacer-12: 12px;
+  --spacer-16: 16px;
+  --spacer-20: 20px;
+  --spacer-24: 24px;
+  --font-sans: -apple-system, "SF Pro Text", "PingFang SC", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-strong: 600;
+  --text-caption: 12px/18px;
+  --text-body: 14px/20px;
+  --text-title: 16px/24px;
+  --text-code: 13px/20px;
+}
+
+.dui-fb .dui-header { display: grid; gap: 4px; margin-bottom: 16px; }
+.dui-fb .dui-title { margin: 0; color: var(--text); font: var(--weight-medium) var(--text-title) var(--font-sans); }
+.dui-fb .dui-sub { margin: 0; color: var(--text-muted); font: var(--weight-regular) var(--text-caption) var(--font-sans); }
+.dui-fb .dui-chart { width: 100%; overflow-x: auto; }
+.dui-fb svg { display: block; width: 100%; height: auto; }
+
+.dui-fb .dui-boundary {
+  fill: color-mix(in srgb, var(--surface) 60%, transparent);
+  stroke: color-mix(in srgb, var(--text-muted) 55%, transparent);
+  stroke-width: 1.2; stroke-dasharray: 6 5; rx: 12;
+}
+.dui-fb .dui-boundaryName { fill: var(--text-muted); font: var(--weight-medium) var(--text-caption) var(--font-sans); }
+
+.dui-fb .dui-node { fill: var(--surface); stroke: var(--border); stroke-width: 1.3; rx: 8; }
+.dui-fb .dui-node.dui-brand { fill: var(--brand-soft); stroke: var(--brand); stroke-width: 1.5; }
+.dui-fb .dui-node.dui-external { fill: var(--surface-muted); stroke: color-mix(in srgb, var(--text-muted) 45%, var(--border)); stroke-width: 1.3; rx: 999; }
+.dui-fb .dui-nodeLabel { fill: var(--text); font: var(--weight-medium) var(--text-body) var(--font-sans); }
+.dui-fb .dui-node.dui-brand .dui-nodeLabel { fill: var(--brand-text); }
+.dui-fb .dui-nodeSub { fill: var(--text-muted); font: var(--weight-regular) var(--text-caption) var(--font-sans); }
+.dui-fb .dui-node.dui-brand .dui-nodeSub { fill: var(--brand); }
+
+.dui-fb .dui-conn { fill: none; stroke: var(--text-muted); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.dui-fb .dui-conn.dui-main { stroke: var(--brand); stroke-width: 1.8; }
+.dui-fb .dui-conn.dui-dashed { stroke-dasharray: 5 6; opacity: 0.8; }
+.dui-fb .dui-arrowHead { fill: var(--text-muted); }
+.dui-fb .dui-arrowHead.dui-main { fill: var(--brand); }
+
+.dui-fb .dui-edgeTag { fill: var(--surface); stroke: var(--border); stroke-width: 1; rx: 8; }
+.dui-fb .dui-edgeTag.dui-main { stroke: color-mix(in srgb, var(--brand) 45%, var(--border)); }
+.dui-fb .dui-edgeText { fill: var(--text); font: var(--weight-medium) var(--text-caption) var(--font-sans); }
+.dui-fb .dui-edgeText.dui-main { fill: var(--brand-text); }
+
+.dui-fb .dui-badge { fill: var(--brand); rx: 999; }
+.dui-fb .dui-badgeText { fill: var(--brand-on); font: var(--weight-strong) var(--text-caption) var(--font-sans); }
+
+.dui-fb .dui-foot { margin-top: 12px; color: var(--text-muted); font: var(--weight-regular) var(--text-caption) var(--font-sans); }
+
+@media (max-width: 520px) {
+  .dui-fb { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>07</span></div>
+    <h1 class="cool">反馈系统</h1>
+    <p class="subtitle">命令会下行，经验必须上行。反馈系统是让数字人类从"执行指令"走向"自我塑造"的那条看不见的路。</p>
+    <div class="meta">
+      <span class="badge cool">反馈</span>
+      <span class="badge">设计层面</span>
+      <span class="badge">2026-08-13</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 为什么需要反馈系统</h2>
+      <p>早期的架构图是"瀑布式"的：上层发指令、下层执行。但人不是这样运转的 —— <b>人靠经验上行活着</b>：做过的事、遇到的挫折、别人的评价，都会反过来改变"接下来怎么想、怎么做"。</p>
+      <p>所以反馈系统要回答的不是"怎么把结果传回去"，而是：<b>下层发生的每一件事，如何改变上层运转的方式</b>。</p>
+    </section>
+
+    <section class="cool">
+      <h2>2. 整体图景</h2>
+      <p>下行命令流（实线）+ 六条上行反馈通道（虚线）+ 快慢双回路，构成完整的反馈系统：</p>
+
+      <div class="dui-fb" data-dynamic-ui-widget data-template="feedback-system" data-mounted="true">
+        <div class="dui-header">
+          <h3 class="dui-title">反馈系统 · 下行与上行</h3>
+          <p class="dui-sub">命令下行 + 六条上行通道 · 快慢双回路</p>
+        </div>
+        <div class="dui-chart">
+          <svg viewBox="0 0 720 510" role="img" aria-label="反馈系统架构图">
+            <defs>
+              <marker id="arrN" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+                <path class="dui-arrowHead" d="M1 1 L7 4 L1 7 Z"/>
+              </marker>
+              <marker id="arrM" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+                <path class="dui-arrowHead dui-main" d="M1 1 L7 4 L1 7 Z"/>
+              </marker>
+            </defs>
+
+            <g font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+
+              <!-- 边界 -->
+              <rect class="dui-boundary" x="40" y="70" width="640" height="60"/>
+              <text class="dui-boundaryName" x="56" y="90">感知层</text>
+              <rect class="dui-boundary" x="40" y="138" width="640" height="208"/>
+              <text class="dui-boundaryName" x="56" y="158">认知层 · 反馈中枢</text>
+              <rect class="dui-boundary" x="40" y="354" width="640" height="64"/>
+              <text class="dui-boundaryName" x="56" y="374">自我层</text>
+              <rect class="dui-boundary" x="40" y="426" width="640" height="60"/>
+              <text class="dui-boundaryName" x="56" y="446">行动层</text>
+
+              <!-- 外部：人类 -->
+              <rect class="dui-node dui-external" x="130" y="14" width="200" height="40"/>
+              <text class="dui-nodeLabel" x="230" y="32" text-anchor="middle">人类</text>
+              <text class="dui-nodeSub" x="230" y="48" text-anchor="middle">对话 · 教导</text>
+
+              <!-- 感知层 -->
+              <rect class="dui-node" x="130" y="78" width="200" height="40"/>
+              <text class="dui-nodeLabel" x="230" y="102" text-anchor="middle">事件总线</text>
+
+              <!-- 认知层 -->
+              <rect class="dui-node" x="130" y="150" width="200" height="44"/>
+              <text class="dui-nodeLabel" x="230" y="178" text-anchor="middle">反馈路由器</text>
+              <rect class="dui-node dui-brand" x="130" y="218" width="200" height="48"/>
+              <text class="dui-nodeLabel" x="230" y="240" text-anchor="middle">思考循环</text>
+              <text class="dui-nodeSub" x="230" y="256" text-anchor="middle">主焦点</text>
+              <rect class="dui-node" x="100" y="292" width="260" height="44"/>
+              <text class="dui-nodeLabel" x="230" y="318" text-anchor="middle">瞬时记忆 · 工作台</text>
+              <rect class="dui-node" x="470" y="150" width="170" height="40"/>
+              <text class="dui-nodeLabel" x="555" y="175" text-anchor="middle">累积器</text>
+              <rect class="dui-node" x="470" y="218" width="170" height="40"/>
+              <text class="dui-nodeLabel" x="555" y="243" text-anchor="middle">心境</text>
+
+              <!-- 自我层 -->
+              <rect class="dui-node" x="470" y="362" width="170" height="44"/>
+              <text class="dui-nodeLabel" x="555" y="386" text-anchor="middle">长久记忆</text>
+              <text class="dui-nodeSub" x="555" y="400" text-anchor="middle">RAG · 索引 · 模糊</text>
+              <rect class="dui-node" x="130" y="362" width="200" height="44"/>
+              <text class="dui-nodeLabel" x="230" y="386" text-anchor="middle">身份内核</text>
+              <text class="dui-nodeSub" x="230" y="400" text-anchor="middle">年龄 · 样貌 · 性格</text>
+
+              <!-- 行动层 -->
+              <rect class="dui-node" x="130" y="434" width="200" height="44"/>
+              <text class="dui-nodeLabel" x="230" y="456" text-anchor="middle">工具</text>
+              <text class="dui-nodeSub" x="230" y="472" text-anchor="middle">眼睛 · 手 · 脚</text>
+
+              <!-- 下行主路径 -->
+              <path class="dui-conn" d="M230 54 H230 V78" marker-end="url(#arrN)"/>
+              <path class="dui-conn" d="M230 118 H230 V150" marker-end="url(#arrN)"/>
+              <path class="dui-conn dui-main" d="M230 194 H230 V218" marker-end="url(#arrM)"/>
+
+              <!-- 快慢回路 -->
+              <path class="dui-conn" d="M330 160 H470" marker-end="url(#arrN)"/>
+              <path class="dui-conn" d="M555 190 H555 V218" marker-end="url(#arrN)"/>
+              <path class="dui-conn" d="M470 236 H330" marker-end="url(#arrN)"/>
+
+              <!-- 认知内部 -->
+              <path class="dui-conn" d="M230 266 H230 V292" marker-end="url(#arrN)"/>
+
+              <!-- 沉淀 -->
+              <path class="dui-conn" d="M360 336 H380 V362 H470" marker-end="url(#arrN)"/>
+
+              <!-- 召回 -->
+              <path class="dui-conn dui-dashed" d="M470 384 H70 V314 H100" marker-end="url(#arrN)"/>
+
+              <!-- 价值底色 -->
+              <path class="dui-conn dui-dashed" d="M230 362 H230 V336" marker-end="url(#arrN)"/>
+
+              <!-- 工具反馈 -->
+              <path class="dui-conn dui-dashed" d="M330 456 H430 V168 H330" marker-end="url(#arrN)"/>
+
+              <!-- 连接标签 -->
+              <g>
+                <rect class="dui-edgeTag" x="250" y="56" width="84" height="20" rx="8"/>
+                <text class="dui-edgeText" x="292" y="70" text-anchor="middle">对话 · 教导</text>
+                <rect class="dui-edgeTag" x="250" y="106" width="84" height="20" rx="8"/>
+                <text class="dui-edgeText" x="292" y="120" text-anchor="middle">② 环境信号</text>
+                <rect class="dui-edgeTag dui-main" x="280" y="196" width="96" height="20" rx="8"/>
+                <text class="dui-edgeText dui-main" x="328" y="210" text-anchor="middle">强反馈 · 打断</text>
+                <rect class="dui-edgeTag" x="352" y="132" width="84" height="20" rx="8"/>
+                <text class="dui-edgeText" x="394" y="146" text-anchor="middle">弱 · 慢回路</text>
+                <rect class="dui-edgeTag" x="586" y="194" width="52" height="20" rx="8"/>
+                <text class="dui-edgeText" x="612" y="208" text-anchor="middle">达阈值</text>
+                <rect class="dui-edgeTag" x="340" y="248" width="84" height="20" rx="8"/>
+                <text class="dui-edgeText" x="382" y="262" text-anchor="middle">④ 心境着色</text>
+                <rect class="dui-edgeTag" x="250" y="269" width="52" height="20" rx="8"/>
+                <text class="dui-edgeText" x="276" y="283" text-anchor="middle">读 · 写</text>
+                <rect class="dui-edgeTag" x="392" y="332" width="84" height="20" rx="8"/>
+                <text class="dui-edgeText" x="434" y="346" text-anchor="middle">⑤ 经历沉淀</text>
+                <rect class="dui-edgeTag" x="80" y="340" width="52" height="20" rx="8"/>
+                <text class="dui-edgeText" x="106" y="354" text-anchor="middle">召回</text>
+                <rect class="dui-edgeTag" x="120" y="340" width="84" height="20" rx="8"/>
+                <text class="dui-edgeText" x="162" y="354" text-anchor="middle">③ 价值底色</text>
+                <rect class="dui-edgeTag" x="440" y="280" width="84" height="20" rx="8"/>
+                <text class="dui-edgeText" x="482" y="294" text-anchor="middle">① 工具反馈</text>
+              </g>
+
+              <!-- 编号徽章 -->
+              <g>
+                <circle class="dui-badge" cx="322" cy="164" r="9"/>
+                <text class="dui-badgeText" x="322" y="168" text-anchor="middle">①</text>
+                <circle class="dui-badge" cx="340" cy="300" r="9"/>
+                <text class="dui-badgeText" x="340" y="304" text-anchor="middle">③</text>
+                <circle class="dui-badge" cx="580" cy="318" r="9"/>
+                <text class="dui-badgeText" x="580" y="322" text-anchor="middle">⑤</text>
+              </g>
+
+            </g>
+          </svg>
+        </div>
+        <p class="dui-foot">实线 = 下行命令 / 主路径 · 虚线 = 上行反馈 · ⑥ 行为模式统计（工具 → 自我层，慢速）见正文</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 六条上行通道</h2>
+      <table>
+        <thead>
+          <tr><th>编号</th><th>通道</th><th>从哪 → 到哪</th><th>解决什么问题</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>①</td><td>工具反馈</td><td>行动层 → 认知层</td><td>"我做的这件事结果如何"</td></tr>
+          <tr><td>②</td><td>环境信号</td><td>感知层 → 认知层</td><td>"世界发生了什么变化"</td></tr>
+          <tr><td>③</td><td>价值底色</td><td>自我层 → 认知层</td><td>"我是谁，所以我该不该这么想"</td></tr>
+          <tr><td>④</td><td>心境着色</td><td>心境 → 认知层</td><td>"我此刻的状态，让我怎么看这件事"</td></tr>
+          <tr><td>⑤</td><td>经历沉淀</td><td>认知层 → 自我层</td><td>"做过的事，慢慢变成我是谁"</td></tr>
+          <tr><td>⑥</td><td>行为模式统计</td><td>行动层 → 自我层</td><td>"我总失败 → 我不擅长"（慢速、统计性）</td></tr>
+        </tbody>
+      </table>
+      <p>①②③④ 是"下层状态反过来影响上层怎么想"，⑤⑥ 是"经验沉淀为自我"。反馈的实质不是传数据，而是<b>改变上层运转的方式</b>。</p>
+    </section>
+
+    <section class="warm">
+      <h2>4. 三个核心机制</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">🔀</div>
+          <h4>反馈路由器</h4>
+          <p>所有反馈先判定三件事：类型（去哪层）、强度（是否打断）、去向（快回路还是慢回路）。强反馈直接打断思考，弱反馈排队入桌。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h4>快慢双回路</h4>
+          <p>同一事件同时走两条路：快回路秒级修正当前行为，慢回路累积成长期性格。一次失败只改当下，反复失败才改变人。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧮</div>
+          <h4>累积器 + 心境</h4>
+          <p>单次反馈是噪声，多次才是信号。累积器到阈值后更新心境；心境是连接"当下反应"与"长期性格"的慢变量。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cool">
+      <h2>5. 一条完整的反馈链</h2>
+      <p>以"查新闻失败"为例，看快慢回路如何协同：</p>
+      <ol>
+        <li><b>工具反馈</b>：页面加载失败 → 路由器判定"操作反馈 · 强 · 去认知层"。</li>
+        <li><b>快回路</b>：立即打断思考 → "换个搜索方式"，当下就改。</li>
+        <li><b>慢回路</b>：失败记入累积器，暂不影响行为。</li>
+        <li><b>心境更新</b>：近几轮失败率偏高 → 心境转为"受挫"，思考带上滤镜（更谨慎、更想放弃）。</li>
+        <li><b>沉淀触发</b>：失败持续累积到阈值 → 触发反思 → 沉淀印记"我的检索方法有问题"。</li>
+        <li><b>人格反馈</b>：印记进入长久记忆 → 以后遇到检索任务从更稳的方法起步（慢回路兑现，性格层面改变）。</li>
+      </ol>
+      <p>第 2 步是快回路，第 6 步是慢回路；第 3~4 步的心境是把两者接起来的桥梁。</p>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>反馈不是一条线，而是六条本质不同的上行通道。</li>
+        <li>反馈改变的不是"数据"，而是"上层怎么想"。</li>
+        <li>快慢双回路保证：一次教训改当下，反复经历改性格。</li>
+        <li>累积器让单次噪声沉淀为可信信号。</li>
+        <li>心境是快回路与慢回路之间的慢变量，拟真感的关键。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 07</span>
+    <span class="pager">
+      <a href="06-综合架构设计与路线图.html">← 上一篇</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目调研 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

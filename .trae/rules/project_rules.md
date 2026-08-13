@@ -17,7 +17,8 @@
 │   │   ├── 03-自我思考循环与瞬时记忆.html
 │   │   ├── 04-长久记忆系统.html
 │   │   ├── 05-教育系统与人格属性.html
-│   │   └── 06-综合架构设计与路线图.html
+│   │   ├── 06-综合架构设计与路线图.html
+│   │   └── 07-反馈系统.html
 │   └── 参考项目/              # 参考项目调研
 │       └── 01-参考项目调研.html
 └── .trae/rules/project_rules.md   # 本文件
@@ -54,6 +55,12 @@
 - 顶部导航：首页 / 研究文档 / 参考项目，active 页高亮。
 - 每页结构：crumbs → 标题 → 副标题 → 徽章 meta → 正文 section → 页脚（含上一篇/下一篇翻页）。
 - 页内使用统一组件：`section`（带 h2）、`callout`（提示块）、`grid + card`、`table`、`pre`、`timeline`。
+
+### dynamic-ui 内嵌图规则（例外条款）
+
+- 架构类图优先使用 `dynamic-ui` 技能包绘制（`/workspace/dynamic-ui-src/`，遵循 `SKILL.md` 与 `tokens/visual-tokens.md`）。
+- 内嵌到文档时：widget 的 CSS 变量定义在作用域类（如 `.dui-fb`）内，所有类名加 `dui-` 前缀，避免与 `docs/assets/style.css` 冲突；不使用 `:root` 全局定义。
+- 图内文字使用中文；标签 2-5 词、连接标签 1-3 词；一个图一个焦点。
 
 ### 语言规则
 
