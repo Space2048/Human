@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 16 · 工具与执行层设计 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>16</span></div>
+    <h1>工具与执行层设计</h1>
+    <p class="subtitle">手脚落地：工具如何注册、如何被调用、如何安全执行、结果如何回流。</p>
+    <div class="meta">
+      <span class="badge warm">工具</span>
+      <span class="badge">设计层面 · 技术</span>
+      <span class="badge">2026-08-14</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 设计目标</h2>
+      <p>行动层（研究 02 的手脚）技术化后要满足：</p>
+      <ul>
+        <li><b>统一协议</b>：所有工具以同一 Schema 注册与调用，引擎不感知具体工具。</li>
+        <li><b>分级授权</b>：只读 / 受控写 / 全量执行三档（研究 02），每档独立门槛。</li>
+        <li><b>全程审计</b>：每次调用留痕，可回放（呼应观测优先）。</li>
+        <li><b>结果回环</b>：工具结果作为 Event 回流到反馈路由器（研究 07 的通道①）。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. 工具注册表</h2>
+      <p>工具注册表是行动层的"神经中枢"。每个工具注册为统一条目：</p>
+      <pre>
+Tool 条目（示意）
+├── name        : web_search / browser_act / shell_run / vision_look ...
+├── 描述        : LLM 理解用途的语义描述
+├── 参数 Schema  : 结构化参数定义（供 LLM 按协议填参）
+├── 授权等级    : read / controlled_write / full
+├── 执行函数    : 实际实现（Python callable）
+└── 前置检查    : 危险操作时的确认钩子
+      </pre>
+      <p>引擎拿到意图后，通过注册表把"意图 → 工具名 → 参数"解析出来执行 —— 这是标准的 Function Calling 模式。</p>
+    </section>
+
+    <section class="warm">
+      <h2>3. 三类核心工具</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">👁</div>
+          <h4>眼睛 · 视觉工具</h4>
+          <p>截图 → 多模态模型理解。Playwright 截屏 + 视觉模型，处理 DOM 读不到的盲区。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🖐</div>
+          <h4>手 · 浏览器工具</h4>
+          <p>搜索 / 打开 / 点击 / 提取。Playwright 自动化，可读可访问性树（结构化优先）。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🦶</div>
+          <h4>脚 · 执行工具</h4>
+          <p>受限 Shell：白名单命令 + 子进程 + 超时。分级授权，危险操作需人类确认。</p>
+        </div>
+      </div>
+      <p>首版工具集建议从最小集开始：<code>web_search · web_open · web_extract · file_read · file_write · shell_run · vision_look</code> —— 够"活着"用，再逐步扩充。</p>
+    </section>
+
+    <section>
+      <h2>4. 安全执行模型</h2>
+      <p>安全不是后补，而是执行路径的一部分：</p>
+      <ol>
+        <li><b>授权检查</b>：按工具声明的等级，对照当前授权上下文（如"夜间整理期仅只读"）。</li>
+        <li><b>参数校验</b>：路径、命令、URL 经过白名单/黑名单检查（防路径穿越、命令注入）。</li>
+        <li><b>危险确认</b>：删除、外发、覆盖等操作挂起，等待人类确认（Human-in-the-loop）。</li>
+        <li><b>执行隔离</b>：子进程 + 超时 + 输出截断；首版不追求完整沙盒，靠白名单兜底。</li>
+        <li><b>审计写入</b>：调用参数、结果摘要、耗时全部写观测层。</li>
+      </ol>
+      <div class="callout warn">
+        <span class="icon">⚠</span>
+        <div>原则重申（研究 02）：<b>自主性越强，护栏越硬</b>。工具的每一档授权都对应一档审计与确认门槛。</div>
+      </div>
+    </section>
+
+    <section class="cool">
+      <h2>5. 结果回流</h2>
+      <p>工具执行完毕后，结果不是"直接返回给 LLM"，而是先变成一个 Event：</p>
+      <pre>
+工具执行 → 结果 / 错误 / 耗时
+        │
+        ▼
+封装为 Event（type=feedback · 强度=按成败判定）
+        │
+        ▼
+反馈路由器 → 快回路（改当前行为）
+        │
+        └→ 慢回路（进累积器，影响心境）
+        │
+        ▼
+写入观测层（审计）
+      </pre>
+      <p>这正是研究 07 通道①的落地实现：工具反馈既改当下（快），又留痕迹（慢），还全程可查。</p>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>统一注册表 + Function Calling，引擎不感知具体工具。</li>
+        <li>三类核心工具：视觉 / 浏览器 / 受限 Shell，最小集起步。</li>
+        <li>安全五步：授权 → 校验 → 确认 → 隔离 → 审计。</li>
+        <li>工具结果封装为 Event 回流，走反馈双回路。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 16</span>
+    <span class="pager">
+      <a href="15-记忆服务设计.html">← 上一篇</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目调研 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

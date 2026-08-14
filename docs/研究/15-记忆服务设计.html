@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 15 · 记忆服务设计 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>15</span></div>
+    <h1>记忆服务设计</h1>
+    <p class="subtitle">理论三层记忆（RAG / 大纲 / 模糊）落成技术：谁存、怎么存、何时忘、如何想起。</p>
+    <div class="meta">
+      <span class="badge">记忆</span>
+      <span class="badge">设计层面 · 技术</span>
+      <span class="badge">2026-08-14</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 三层存储的技术映射</h2>
+      <p>研究 04 的理论三层，在技术上对应三种存储：</p>
+      <table>
+        <thead>
+          <tr><th>理论层</th><th>技术实现</th><th>存储介质</th><th>写入者</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>RAG 库（事实）</td><td>向量库 + 全文索引</td><td>ChromaDB</td><td>印记沉淀（引擎）</td></tr>
+          <tr><td>大纲索引（结构）</td><td>关系表 / JSON 图</td><td>SQLite</td><td>深度整理（研究 12）</td></tr>
+          <tr><td>数据模糊（遗忘）</td><td>衰减字段 + 调度任务</td><td>SQLite + Chroma 元数据</td><td>衰减调度器</td></tr>
+        </tbody>
+      </table>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>技术取向：向量库只管"检索"，不负责"记忆"。真正的"记忆感"来自大纲索引的结构化与衰减调度的遗忘——这两层在 SQLite 里，可读可改可审计。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 记忆写入流程</h2>
+      <p>一条经历从"发生"到"成为记忆"，经过三个环节：</p>
+      <pre>
+引擎产出 印记（Impression）
+        │
+        ▼
+① 重要性评分 ── LLM 打分 + 规则保底（研究 07 的"规则+判断"混合）
+        │
+        ▼
+② 双写 ── 正文进 Chroma（可检索）
+        │     元数据进 SQLite（时间 · 来源 · 重要性 · 情绪标签）
+        │
+        ▼
+③ 等待深度整理 ── 夜间批量：重排进大纲 / 低价值衰减 / 模式沉淀为印记
+      </pre>
+    </section>
+
+    <section class="warm">
+      <h2>3. 记忆读取流程</h2>
+      <p>检索（研究 09 的第二步）不是"查一次向量"，而是三次调用混合：</p>
+      <ol>
+        <li><b>向量召回</b>：语义相似的前 K 条（Chroma）。</li>
+        <li><b>结构召回</b>：大纲索引里与当前主题相关的关系/脉络（SQLite）。</li>
+        <li><b>着色</b>：身份偏好过滤 + 心境加权（研究 11）—— 低落时更容易想起失败经历。</li>
+      </ol>
+      <p>三次结果合并成"这轮思考带着什么记忆来"的上下文。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>技术取向：着色（第 3 步）是"拟真记忆"与"企业 RAG"的分野所在 —— 纯向量检索是精确的，加了人格过滤与心境加权，才像"一个人想起的事"。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 衰减与遗忘</h2>
+      <p>数据模糊层（遗忘）由衰减调度器实现，按主观时间轴（研究 11）运行：</p>
+      <ul>
+        <li><b>重要性衰减</b>：每条记忆有 <code>salience</code> 字段，随"距上次想起的时长"衰减（模拟"久未想起会淡忘"）。</li>
+        <li><b>混淆合并</b>：相似记忆在深度整理时合并，生成"模糊化"的概括（研究 04 的相似混淆）。</li>
+        <li><b>废弃清理</b>：salience 低于阈值且无引用的记忆进入"遗忘区"，从活跃检索中剔除。</li>
+        <li><b>可追溯</b>：遗忘不物理删除，标记 <code>forgotten</code> —— 教育/回滚时可找回（呼应"可重置"约束）。</li>
+      </ul>
+    </section>
+
+    <section class="cool">
+      <h2>5. 大纲索引：记忆的结构骨架</h2>
+      <p>大纲索引是让记忆"像人"的第二关键（第一是着色）。它维护几类结构：</p>
+      <table>
+        <thead>
+          <tr><th>结构</th><th>内容</th><th>示例</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>人物关系</td><td>谁 · 关系 · 事件锚点</td><td>"小林 · 好友 · 一起改过 bug"</td></tr>
+          <tr><td>事件主线</td><td>连续事件的因果链</td><td>"发布 → 用户反馈 → 反思 → 改进"</td></tr>
+          <tr><td>知识框架</td><td>学到的概念与联系</td><td>"RAG = 检索 + 生成"</td></tr>
+          <tr><td>自我认知</td><td>对"我是谁"的归纳</td><td>"我 · 遇到反复失败会怀疑自己"</td></tr>
+        </tbody>
+      </table>
+      <p>大纲由深度整理（研究 12）从散碎记忆中归纳生成，同时被检索时用于"结构召回"。</p>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>向量库只做检索，记忆感来自大纲 + 衰减。</li>
+        <li>写入 = 评分 → 双写 → 等整理。</li>
+        <li>读取 = 向量 + 结构 + 着色三路合并。</li>
+        <li>遗忘 = 衰减 → 合并 → 标记，不物理删除。</li>
+        <li>大纲索引是"像人"的结构骨架。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 15</span>
+    <span class="pager">
+      <a href="14-核心引擎设计.html">← 上一篇</a>
+      <a href="16-工具与执行层设计.html">下一篇：工具与执行 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

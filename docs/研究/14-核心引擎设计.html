@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 14 · 核心引擎设计 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>14</span></div>
+    <h1>核心引擎设计</h1>
+    <p class="subtitle">思考循环是系统的"心脏"。引擎设计解决：它如何跳、每跳做什么、被打断怎么办。</p>
+    <div class="meta">
+      <span class="badge cool">引擎</span>
+      <span class="badge">设计层面 · 技术</span>
+      <span class="badge">2026-08-14</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 设计目标</h2>
+      <p>核心引擎要满足三个技术目标：</p>
+      <ul>
+        <li><b>持续心跳</b>：进程常驻，按节奏自驱动运转（呼应研究 08 的五条节奏线）。</li>
+        <li><b>可打断</b>：强反馈能插队（呼应研究 07 的反馈路由器），且打断后可恢复主线。</li>
+        <li><b>可观测</b>：每一轮思考都留痕，能回放（呼应研究 13 的观测优先原则）。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. 调度器：心跳机制</h2>
+      <p>调度器是引擎的"心脏起搏器"。它按节奏参数定时触发思考轮次，节奏由状态层（研究 11）提供：</p>
+      <pre>
+状态层（节奏 · 心境 · 时间）
+        │ 当前节奏参数（专注 / 走神 / 静默 / 应激）
+        ▼
+思考循环调度器 ──tick──▶ 单轮执行器
+        │                      │
+        ├─ 优先级队列 ◀── 反馈路由器（强反馈插队）
+        │
+        └─ 心跳日志 → 观测层
+      </pre>
+      <table>
+        <thead>
+          <tr><th>节奏</th><th>触发频率</th><th>单轮深度</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>专注块</td><td>高（密集 tick）</td><td>完整四步，斟酌充分</td></tr>
+          <tr><td>走神</td><td>中（随机 tick）</td><td>联想式，浅斟酌</td></tr>
+          <tr><td>静默消化</td><td>低（稀疏 tick）</td><td>以印记整理为主</td></tr>
+          <tr><td>应激</td><td>即时（插队）</td><td>跳过检索/斟酌，直出意图</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="cool">
+      <h2>3. 单轮执行器：四步实现</h2>
+      <p>每一轮思考（研究 09 的四步骨架）在技术上是四个有序阶段：</p>
+      <ol>
+        <li><b>感知（collect）</b>：从事件队列 + 瞬时记忆取"桌上有什么"。事件入队由接口层和反馈路由器负责。</li>
+        <li><b>检索（retrieve）</b>：调用记忆服务召回相关记忆 + 身份约束 + 心境着色参数（并行可合为一个 Prompt 上下文）。</li>
+        <li><b>斟酌（deliberate）</b>：LLM 推理，结合身份、动机、风险记忆生成判断 —— 这一阶段最"贵"，但决定人格。</li>
+        <li><b>产出（emit）</b>：结构化输出三件套 <code>念头 / 意图 / 印记</code>，分别路由到工作台 / 动机引擎 / 记忆服务。</li>
+      </ol>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>技术取向：四步不是四次 LLM 调用。首版可合并为<b>一次调用 + 结构化输出</b>（四步是"逻辑阶段"，未必是"网络调用"）。后期再按需拆分。</div>
+      </div>
+    </section>
+
+    <section class="warm">
+      <h2>4. 数据模型：轮次与事件</h2>
+      <p>引擎的观测基础是三个核心数据对象：</p>
+      <table>
+        <thead>
+          <tr><th>对象</th><th>字段（示意）</th><th>用途</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Event</td><td>id · type · payload · 时间戳 · 强度</td><td>一切输入的统一形态（人类 / 环境 / 工具 / 反馈）</td></tr>
+          <tr><td>Turn</td><td>id · 节奏 · 感知摘要 · 检索引用 · 产出三件套 · 消耗</td><td>一轮思考的完整留痕，可回放</td></tr>
+          <tr><td>Impression</td><td>内容 · 来源 Turn · 重要性 · 时间</td><td>印记，待沉淀进长久记忆</td></tr>
+        </tbody>
+      </table>
+      <p>这三个对象都写入观测层日志，且 Turn 引用 Event 与 Impression —— <b>回放一轮思考，就能看到它被什么触发、想到了什么、记住了什么</b>。</p>
+    </section>
+
+    <section>
+      <h2>5. 打断与恢复</h2>
+      <p>强反馈打断是引擎必须处理的场景（呼应研究 07）：</p>
+      <ul>
+        <li><b>打断</b>：反馈路由器把强事件插入优先级队列头部，调度器暂停当前主线，先处理。</li>
+        <li><b>上下文保存</b>：被打断的轮次不丢弃，其"未完成意图"挂起（研究 10 的动机滞留）。</li>
+        <li><b>恢复</b>：处理完打断事件后，按动机滞留强度决定是回到原主线，还是转入新线。</li>
+      </ul>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>技术取向：这个"保存-挂起-恢复"机制，技术上就是一个<b>任务栈 + 意图优先级</b>。人被打断后能否回到原事，取决于"这事多重要"——动机引擎提供这个权重。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>调度器按节奏 tick，事件队列支持插队。</li>
+        <li>单轮四步是逻辑阶段，首版合并为一次调用。</li>
+        <li>Event / Turn / Impression 三个对象支撑完整观测。</li>
+        <li>打断 = 任务栈挂起，恢复靠动机滞留权重。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 14</span>
+    <span class="pager">
+      <a href="13-技术架构设计.html">← 上一篇</a>
+      <a href="15-记忆服务设计.html">下一篇：记忆服务 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>
