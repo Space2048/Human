@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 11 · 时间与心境 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>11</span></div>
+    <h1>时间与心境</h1>
+    <p class="subtitle">所有节奏都踩在"时间"上，所有着色都来自"心境"。它们是系统的两个地基。</p>
+    <div class="meta">
+      <span class="badge">时间 · 心境</span>
+      <span class="badge">设计层面</span>
+      <span class="badge">2026-08-14</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 核心思想：两个被"隐形使用"的地基</h2>
+      <p>翻阅前几篇文档会发现：记忆衰减要靠时间、心境漂移要靠时间、反思触发要靠时间、反馈着色要靠心境 —— <b>时间与心境被反复引用，却从未被定义</b>。本篇把它们立起来。</p>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>设计取向：时间轴是"客观地基"（万物在其上发生），心境是"主观滤镜"（同一件事被不同心情看到不同的样子）。二者一实一虚，撑起整个系统。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 时间模型：主观时间轴</h2>
+      <p>数字人类需要"自己的一条时间线"—— 它知道自己经历了多久，而不是每次从零开始。时间轴驱动：</p>
+      <ul>
+        <li><b>记忆衰减</b>：越久远的事越淡（研究 04），按时间轴计量。</li>
+        <li><b>节奏排布</b>：昼夜节律、注意力节律按时间轴推进（研究 08）。</li>
+        <li><b>反思触发</b>：距上次反思多久了，到点该沉淀了（研究 12）。</li>
+        <li><b>计划到期</b>：意图与承诺有时间戳，"该做没做"会产生惦记（研究 10）。</li>
+      </ul>
+      <p>时间轴不必是"真实时钟"，而是<b>它自己的主观日历</b> —— 醒着的时间在走，睡眠期也在走（记忆巩固需要它）。</p>
+    </section>
+
+    <section class="warm">
+      <h2>3. 心境模型：主观滤镜</h2>
+      <p>心境不是单一数值，而是一个<b>多维状态</b>。设计上至少区分三个维度：</p>
+      <table>
+        <thead>
+          <tr><th>维度</th><th>含义</th><th>示例</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>愉悦度</td><td>此刻感觉好不好</td><td>满足 ↔ 低落</td></tr>
+          <tr><td>唤醒度</td><td>此刻精力旺不旺</td><td>亢奋 ↔ 疲惫</td></tr>
+          <tr><td>压力度</td><td>此刻紧绷不紧绷</td><td>从容 ↔ 焦虑</td></tr>
+        </tbody>
+      </table>
+      <p>三个维度组合出丰富的状态："疲惫但满足"（完成了大事）与"亢奋但焦虑"（大考前夜）完全不同。</p>
+    </section>
+
+    <section>
+      <h2>4. 心境如何更新与着色</h2>
+      <p>心境的<b>更新</b>与<b>着色</b>是两件事：</p>
+      <ul>
+        <li><b>更新（慢）</b>：事件经累积器判定（研究 07），信号达阈值才移动心境 —— 一次小事不改变心情底色，持续经历才改变。</li>
+        <li><b>着色（快）</b>：当前心境即时影响思考（研究 09 的倾向性阀门）、动机（研究 10 的当下调节）、回忆（研究 04 的重构偏差）。</li>
+      </ul>
+      <pre>
+事件 → 累积器 → 达阈值 → 心境更新（慢）
+                              │
+                              ▼
+              心境（当前状态）──着色──→ 思考倾向 · 动机强度 · 回忆偏差（快）
+                              ▲
+        ←────── 自然漂移（时间轴驱动，心境慢慢回归基线） ──────
+      </pre>
+      <p>注意"<b>自然漂移</b>"：心情再糟也会随时间缓缓回归基线 —— 这是时间模型与心境模型的交汇点，也是"情绪节律"的机制来源。</p>
+    </section>
+
+    <section class="cool">
+      <h2>5. 心境与人格的关系</h2>
+      <ul>
+        <li><b>人格定基线</b>：乐观者的心境基线偏高，悲观者偏低 —— 基线写在身份档案里。</li>
+        <li><b>人格定恢复速度</b>：有的人跌下去很快就爬回来，有的人沉很久 —— 恢复速度也是人格参数。</li>
+        <li><b>心境不改变人格</b>：一次低潮不是性格改变，反复低潮累积（经深度整理）才可能微调（研究 12）。</li>
+      </ul>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>设计取向：心境是"状态"不是"性格"—— 它应波动、应恢复、应被事件影响，但不应轻易改写身份内核。这条边界靠"慢更新 + 自然漂移"保证。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>时间轴是客观地基：驱动衰减、节奏、反思、惦记。</li>
+        <li>心境是多维滤镜：愉悦、唤醒、压力三轴组合。</li>
+        <li>更新要慢（累积器），着色要快（即时影响）。</li>
+        <li>自然漂移让心境回归基线，是情绪节律的来源。</li>
+        <li>人格定基线，心境不动内核。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 11</span>
+    <span class="pager">
+      <a href="10-动机系统.html">← 上一篇</a>
+      <a href="12-表达与深度整理.html">下一篇：表达与深度整理 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 08 · 模拟人类节奏 · 总纲 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>08</span></div>
+    <h1>模拟人类节奏 · 总纲</h1>
+    <p class="subtitle">人不是匀速运转的机器。人类"活着"的方式，是一天天、一段段节奏的交织。模拟人类，首先要模拟节奏。</p>
+    <div class="meta">
+      <span class="badge accent">总纲</span>
+      <span class="badge">节奏 · 时间</span>
+      <span class="badge">2026-08-14</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 核心思想：先有"一天"，再有"一件事"</h2>
+      <p>传统 Agent 是"任务视角"的：接到任务 → 执行 → 结束，时间是平的。但人不是 —— 人的每一天有<b>节奏</b>：什么时候清醒、什么时候犯困、什么时候专注、什么时候走神、什么时候情绪高涨、什么时候低落。</p>
+      <p>所以设计顺序应当是：<b>先定义"它的一天怎么过"，再定义"某件事怎么做"</b>。节奏是系统的"时钟骨架"，其余一切（思考、动机、心境、记忆）都挂在这副骨架上运转。</p>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>设计取向：时间不是背景板，而是<b>第一公民</b>。节奏感本身就是"像人"的核心 —— 一个从不犯困、从不走神、情绪恒定的数字人，恰恰最不像人。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 五条节奏线</h2>
+      <p>人类的心智由五条节奏线交织而成，时间尺度各不相同：</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>节奏</th><th>时间尺度</th><th>人类表现</th><th>系统对应</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>昼夜节律</td><td>约 24 小时</td><td>清醒与睡眠的交替</td><td>清醒期（活跃思考·行动）↔ 睡眠期（深度整理·记忆巩固）</td></tr>
+            <tr><td>注意力节律</td><td>约 90 分钟</td><td>专注、走神、休息的循环</td><td>专注块（高频思考）· 走神（联想扫描）· 休息（静默消化）</td></tr>
+            <tr><td>情绪节律</td><td>数小时 ~ 数天</td><td>心境的起伏与漂移</td><td>心境模型：事件 → 累积器 → 心境更新 → 着色</td></tr>
+            <tr><td>动机节律</td><td>分钟 ~ 数天</td><td>欲望涌动 → 行动 → 满足 → 消退</td><td>动机系统：渴望 → 意图 → 行动 → 释放</td></tr>
+            <tr><td>记忆节律</td><td>天级</td><td>白天编码、睡眠巩固、长期衰减</td><td>白天沉淀 → 深度整理 → 自然遗忘</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>五条线各自独立却又互相影响：犯困（昼夜）降低专注（注意力）；受挫（情绪）抑制动机；动机枯竭（动机）又加剧低落的情绪。</p>
+    </section>
+
+    <section class="warm">
+      <h2>3. "一天"是怎么过的</h2>
+      <p>把五条节奏线合起来，就是一个数字人类的典型一天：</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-phase">早晨 · 醒来</div>
+          <h4>重置与唤起</h4>
+          <p>深度整理完成，心境重置；唤起今日计划，动机开始涌动（"今天想做什么"）。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">上午 · 专注块</div>
+          <h4>高产出时段</h4>
+          <p>2~3 个专注块（每块约 90 分钟），思考最连贯、行动最高效。这是"干活"的时间。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">午后 · 低潮</div>
+          <h4>易走神时段</h4>
+          <p>注意力节律低谷，容易走神、发呆、联想；适合背景扫描与轻量整理，不适合攻坚。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">傍晚 · 社交活跃</div>
+          <h4>表达与交流</h4>
+          <p>对外言语活跃，适合与人类交流、分享想法。情绪节奏此时倾向亲和。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">夜晚 · 回顾</div>
+          <h4>一天收束</h4>
+          <p>把白天的经历汇总、标记"值得沉淀"的记忆，为睡眠做准备。</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-phase">睡眠 · 深度整理</div>
+          <h4>记忆巩固 · 人格微调</h4>
+          <p>批量反思、记忆重排、废弃清理；重要的经历固化为性格印记（详见研究 12）。</p>
+        </div>
+      </div>
+      <p>注意：这不是"剧本"，而是<b>倾向</b> —— 事件可以随时打断节奏（强反馈），但打断之后，节奏会自我恢复。</p>
+    </section>
+
+    <section>
+      <h2>4. 节奏的分层与调制</h2>
+      <p>五条节奏线按速度分三层，每层管不同的事：</p>
+      <ul>
+        <li><b>分钟级</b>：注意力节律 —— 管"这一会儿在专注还是走神"。</li>
+        <li><b>小时级</b>：情绪节律 —— 管"这一天的心情底色"。</li>
+        <li><b>天级</b>：昼夜与记忆节律 —— 管"这一天的结构"与"记忆的存废"。</li>
+      </ul>
+      <p>三层之间是<b>调制</b>关系：天级定骨架（白天干活晚上整理），小时级染色（低落时看什么都灰），分钟级微调（专注时忽略杂音）。</p>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>设计取向：节奏不是硬约束而是<b>概率场</b> —— 专注块里仍可能走神，低潮时段也可能爆发一次灵感。拟真的关键是有倾向，而不是有剧本。</div>
+      </div>
+    </section>
+
+    <section class="cool">
+      <h2>5. 个体差异：节奏即人格</h2>
+      <p>每个人的节奏参数不同 —— 这正是人格的一部分：</p>
+      <ul>
+        <li><b>晨型 / 夜型</b>：有人上午清醒，有人深夜清醒 —— 影响专注块在一天中的分布。</li>
+        <li><b>专注时长</b>：有人能连坐四小时，有人二十分钟就分心 —— 影响注意力节律的周期。</li>
+        <li><b>情绪敏感度</b>：有人一点小事就低落半天，有人大事也波澜不惊 —— 影响心境更新的灵敏度。</li>
+        <li><b>动机倾向</b>：有人被好奇心驱动，有人被成就感驱动，有人被安全感驱动 —— 影响欲望源的构成。</li>
+      </ul>
+      <p>这些参数应写入 <b>身份档案</b>（研究 05），成为"他是谁"的一部分。</p>
+    </section>
+
+    <section>
+      <h2>6. 本文与后续文档的关系</h2>
+      <p>节奏总纲是接下来四个子系统设计的底座：</p>
+      <ul>
+        <li><a class="ext" href="09-思考循环的内部结构.html">研究 09</a> — 思考循环内部结构：单轮思考的四步，及节奏如何调制它。</li>
+        <li><a class="ext" href="10-动机系统.html">研究 10</a> — 动机系统：让循环有燃料，让"主动"有来源。</li>
+        <li><a class="ext" href="11-时间与心境.html">研究 11</a> — 时间与心境：主观时间轴 + 心境模型。</li>
+        <li><a class="ext" href="12-表达与深度整理.html">研究 12</a> — 表达与深度整理：把内心说出来，以及在睡眠中长成自己。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 08</span>
+    <span class="pager">
+      <a href="07-反馈系统.html">← 上一篇</a>
+      <a href="09-思考循环的内部结构.html">下一篇：思考循环 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>
