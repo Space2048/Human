@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 17 · 前端展示功能设计 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>17</span></div>
+    <h1>前端展示功能设计</h1>
+    <p class="subtitle">这个系统的独特之处不是"能聊天"，而是"能看到一个大脑在想什么"。前端就是那扇窗。</p>
+    <div class="meta">
+      <span class="badge cool">前端</span>
+      <span class="badge">细化设计</span>
+      <span class="badge">2026-08-14</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 定位：不是聊天框，是"大脑之窗"</h2>
+      <p>普通 Agent 的前端是聊天窗口。HUMAN 的前端必须是<b>观察窗</b>——因为系统的首要约束是"可观测"（研究 13），教育（研究 05）的前提就是能看到它在想什么、记住什么、为什么这么做。</p>
+      <p>所以前端有两类角色：</p>
+      <ul>
+        <li><b>交流者</b>：与数字人类对话、教导、提问 —— 它"说"的入口。</li>
+        <li><b>监护人</b>：查看它的内心独白、记忆、心境、行动轨迹 —— 观察并教育。</li>
+      </ul>
+      <div class="callout key">
+        <span class="icon">✳</span>
+        <div>设计取向：前端展示的不是"答案"，而是<b>过程</b>。观察一个念头如何变成行动，比看到结果更能让人理解（并教育）这个数字人类。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 界面分区</h2>
+      <p>前端整体划分为五大面板，对应系统的核心结构：</p>
+      <table>
+        <thead>
+          <tr><th>面板</th><th>展示内容</th><th>数据来源</th><th>监护人价值</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>对话区</td><td>对外言语（与人类的交流）</td><td>表达层（研究 12）</td><td>与它对话、教导它</td></tr>
+          <tr><td>思考流</td><td>内心独白、念头、意图实时滚动</td><td>Turn 记录（研究 14）</td><td>看它"到底在想什么"</td></tr>
+          <tr><td>状态栏</td><td>心境三轴、当前节奏、时间</td><td>状态管理器（研究 11）</td><td>理解它"此刻状态如何"</td></tr>
+          <tr><td>记忆库</td><td>可检索的印记、大纲、遗忘区</td><td>记忆服务（研究 15）</td><td>回看它"记得什么、忘了什么"</td></tr>
+          <tr><td>行动日志</td><td>工具调用、反馈事件、审计</td><td>观测层（研究 13/16）</td><td>回放它"做过什么、为何如此"</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="warm">
+      <h2>3. 核心交互：实时观察（SSE 流）</h2>
+      <p>前端的灵魂是<b>实时</b>——思考不能等轮询，要用流式推送：</p>
+      <ul>
+        <li><b>思考流实时滚动</b>：每一轮 Turn 产出即推送到前端（SSE），像看它的脑电图。</li>
+        <li><b>状态栏实时刷新</b>：心境变化、节奏切换即时可见（如"专注块→走神"的切换）。</li>
+        <li><b>行动日志即时追加</b>：工具被调用时，调用参数与结果摘要立刻出现。</li>
+        <li><b>打断可视化</b>：强反馈打断发生时，界面上能看出"它被什么打断了"。</li>
+      </ul>
+      <div class="callout info">
+        <span class="icon">✳</span>
+        <div>技术取向：SSE（Server-Sent Events）单向推送足够覆盖全部场景，比 WebSocket 简单可靠。只有未来需要"远程操控"才升级 WebSocket。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 特殊展示：记忆的可视化</h2>
+      <p>记忆库面板是"监护人"最有价值的部分，做三档展示：</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h4>检索</h4>
+          <p>输入关键词/语义，检索 RAG 库，看它"此刻会想起什么"。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗂</div>
+          <h4>大纲图</h4>
+          <p>人物关系、事件主线、知识框架的图化展示，看它的"认知结构"。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌫</div>
+          <h4>遗忘区</h4>
+          <p>被衰减标记的记忆，展示"它正在忘记什么"——监护人可决定是否找回。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cool">
+      <h2>5. 教育与干预入口</h2>
+      <p>前端不仅是观察窗，也是教育的入口（研究 05）：</p>
+      <ul>
+        <li><b>直接对话</b>：像和人说话一样教导、纠正、表扬。</li>
+        <li><b>危险操作确认</b>：工具的高危动作弹出确认框（研究 16 的 Human-in-the-loop）。</li>
+        <li><b>记忆干预</b>：查看/修改/找回记忆（可重置约束的界面化）。</li>
+        <li><b>档案查看</b>：身份档案、动机配方、节奏参数的可视化与微调。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>前端 = 大脑之窗，观察过程比看结果更重要。</li>
+        <li>五大面板：对话 / 思考流 / 状态 / 记忆 / 行动日志。</li>
+        <li>SSE 流式推送支撑实时观察。</li>
+        <li>记忆库三档展示：检索 / 大纲图 / 遗忘区。</li>
+        <li>教育入口内置于前端：对话、确认、干预、档案。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 17</span>
+    <span class="pager">
+      <a href="16-工具与执行层设计.html">← 上一篇</a>
+      <a href="18-后端依赖清单.html">下一篇：后端依赖 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研究 18 · 后端依赖清单 — HUMAN</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<div class="topnav">
+  <div class="inner">
+    <a class="brand" href="../index.html">
+      <span class="logo">🧠</span>
+      <span>HUMAN · AI 模拟人类</span>
+    </a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="01-项目概述与目标.html" class="active">研究文档</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="doc-head">
+    <div class="crumbs"><a href="../index.html">首页</a> / <span>研究文档</span> / <span>18</span></div>
+    <h1>后端依赖清单</h1>
+    <p class="subtitle">每一个依赖都是带着问题选的：它解决什么、有什么替代、为什么是它。</p>
+    <div class="meta">
+      <span class="badge">依赖</span>
+      <span class="badge">细化设计</span>
+      <span class="badge">2026-08-14</span>
+    </div>
+  </div>
+
+  <article>
+
+    <section>
+      <h2>1. 依赖选型原则</h2>
+      <ul>
+        <li><b>少而稳</b>：只引入解决真实问题的库，优先选维护活跃、文档全的。</li>
+        <li><b>可替换</b>：核心依赖通过接口隔离（如向量库、LLM 层），换库不动业务代码。</li>
+        <li><b>版本锁定</b>：pyproject.toml 用约束范围（如 <code>^</code>），不锁死也不放任。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. 生产依赖</h2>
+      <table>
+        <thead>
+          <tr><th>依赖</th><th>用途</th><th>为什么是它</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>litellm</code></td><td>多模型统一接入层</td><td>一套 API 接 OpenAI / Anthropic / 本地 Ollama，满足多模型混合（研究 13）</td></tr>
+          <tr><td><code>asyncio</code>（标准库）</td><td>事件驱动引擎</td><td>调度器心跳、事件队列、打断恢复的底座；零第三方依赖</td></tr>
+          <tr><td><code>chromadb</code></td><td>向量检索</td><td>内嵌式、零部署、支持内存模式，首版最轻的 RAG 方案（研究 15）</td></tr>
+          <tr><td><code>fastapi</code> + <code>uvicorn</code></td><td>Web 服务与 ASGI</td><td>异步原生、类型友好，前端 SSE 接口的最简载体（研究 17）</td></tr>
+          <tr><td><code>sse-starlette</code></td><td>SSE 流式推送</td><td>思考流/状态栏/行动日志实时推送的标准实现</td></tr>
+          <tr><td><code>playwright</code></td><td>浏览器自动化（手 + 眼）</td><td>跨浏览器、可截屏、可读可访问性树（研究 16）</td></tr>
+          <tr><td><code>pydantic</code> + <code>pydantic-settings</code></td><td>数据模型与配置</td><td>Event/Turn/Impression 模型校验；配置从环境变量/YAML 加载</td></tr>
+          <tr><td><code>pyyaml</code></td><td>配置解析</td><td>身份档案、动机配方、节奏参数外置为 YAML（研究 13）</td></tr>
+          <tr><td><code>httpx</code></td><td>异步 HTTP 客户端</td><td>搜索引擎调用、外部 API 请求的异步实现</td></tr>
+          <tr><td><code>rich</code></td><td>CLI 美化</td><td>首版 CLI 的终端渲染（思考流彩色输出、状态面板）</td></tr>
+          <tr><td><code>aiofiles</code></td><td>异步文件读写</td><td>记忆 JSON 文件、日志写入不阻塞事件循环</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="warm">
+      <h2>3. 开发依赖</h2>
+      <table>
+        <thead>
+          <tr><th>依赖</th><th>用途</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>pytest</code> + <code>pytest-asyncio</code></td><td>单元/异步测试（引擎调度、记忆读写、工具安全）</td></tr>
+          <tr><td><code>ruff</code></td><td>Lint + Format 一体，快且零配置</td></tr>
+          <tr><td><code>mypy</code></td><td>类型检查（核心引擎必须类型严谨）</td></tr>
+          <tr><td><code>pre-commit</code></td><td>提交前自动跑 lint / 类型 / 格式</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 可选/后续依赖</h2>
+      <ul>
+        <li><b>sentence-transformers</b> 或 <b>fastembed</b>：本地嵌入模型（换掉远端 embedding，隐私/离线场景）</li>
+        <li><b>tiktoken</b>：精确 token 计数（优化上下文预算时启用）</li>
+        <li><b>psutil</b>：进程资源监控（长时运行的体检）</li>
+        <li><b>aiosqlite</b>：SQLite 异步访问（记忆写入压力上来后启用）</li>
+        <li><b>websockets</b>：未来远程操控升级时替换 SSE</li>
+      </ul>
+    </section>
+
+    <section class="cool">
+      <h2>5. 依赖分层示意（pyproject）</h2>
+      <pre>
+[project]
+dependencies = [
+    "litellm",
+    "chromadb",
+    "fastapi",
+    "uvicorn[standard]",
+    "sse-starlette",
+    "playwright",
+    "pydantic>=2",
+    "pydantic-settings",
+    "pyyaml",
+    "httpx",
+    "rich",
+    "aiofiles",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+    "mypy",
+    "pre-commit",
+]
+      </pre>
+    </section>
+
+    <section>
+      <h2>6. 设计要点小结</h2>
+      <ul>
+        <li>生产依赖 11 项，全部"带着问题选的"。</li>
+        <li>LLM 层与向量库通过接口隔离，可替换。</li>
+        <li>开发依赖 5 项覆盖测试 / 类型 / 格式 / 钩子。</li>
+        <li>后续依赖按需引入，不提前背负。</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <div class="doc-foot">
+    <span>HUMAN Project · 研究文档 18</span>
+    <span class="pager">
+      <a href="17-前端展示功能设计.html">← 上一篇</a>
+      <a href="../参考项目/01-参考项目调研.html">参考项目调研 →</a>
+    </span>
+  </div>
+
+</div>
+
+</body>
+</html>
